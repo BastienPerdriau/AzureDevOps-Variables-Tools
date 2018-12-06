@@ -33,7 +33,7 @@
   ],
   "content": {
     "license": {
-      "path": "license.md"
+      "path": "LICENSE"
     },
     "details": {
       "path": "overview.md"
