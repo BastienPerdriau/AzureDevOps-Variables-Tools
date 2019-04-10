@@ -1,11 +1,11 @@
 {
   "manifestVersion": 1,
   "id": "azuredevops-variables-tasks",
+  "publisher": "BastienPerdriau",
   "version": "0.1.1",
   "name": "Variables",
-  "scopes": [],
-  "description": "Build &amp; Release tasks to handle variable in definitions and executions",
-  "publisher": "BastienPerdriau",
+  "scopes": ["vso.build_execute", "vso.release_manage"],
+  "description": "Build & Release tasks to handle variable in definitions and executions",
   "galleryFlags": [
     "Preview"
   ],
@@ -21,7 +21,7 @@
     "api-version/3.0"
   ],
   "tags": [
-    "Sample"
+    "Variables"
   ],
   "categories": [
     "Azure Pipelines"
@@ -41,18 +41,18 @@
   },
   "links": {
     "getstarted": {
-      "uri": "https://bit.ly"
+      "uri": "https://github.com/BastienPerdriau/azuredevops-variables-tasks"
     },
     "support": {
-      "uri": "https://bit.ly"
+      "uri": "https://github.com/BastienPerdriau/azuredevops-variables-tasks/issues"
     },
     "issues": {
-      "uri": "https://bit.ly"
+      "uri": "https://github.com/BastienPerdriau/azuredevops-variables-tasks/issues"
     }
   },
   "repository": {
     "type": "git",
-    "uri": "https://bit.ly"
+    "uri": "https://github.com/BastienPerdriau/azuredevops-variables-tasks"
   },
   "branding": {
     "color": "rgb(220, 235, 252)",
@@ -60,18 +60,44 @@
   },
   "files": [
     {
-      "path": "variable-definition-update"
+      "path": "VariableAssignmentTask"
+    },
+    {
+      "path": "VariableIncrementationTask"
+    },
+    {
+      "path": "VariableDefinitionUpdateTask"
     }
   ],
   "contributions": [
     {
-      "id": "variable-definition-update",
+      "id": "VariableAssignmentTask",
       "targets": [
         "ms.vss-distributed-task.tasks"
       ],
       "type": "ms.vss-distributed-task.task",
       "properties": {
-        "name": "variable-definition-update"
+        "name": "VariableAssignmentTask"
+      }
+    },
+    {
+      "id": "VariableIncrementationTask",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "type": "ms.vss-distributed-task.task",
+      "properties": {
+        "name": "VariableIncrementationTask"
+      }
+    },
+    {
+      "id": "VariableDefinitionUpdateTask",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "type": "ms.vss-distributed-task.task",
+      "properties": {
+        "name": "VariableDefinitionUpdateTask"
       }
     }
   ]

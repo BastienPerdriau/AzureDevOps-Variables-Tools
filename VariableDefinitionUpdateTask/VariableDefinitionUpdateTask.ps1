@@ -16,12 +16,14 @@ param(
 	$Token
 )
 
-# TODO Convert to TS
 # TODO Use VSS Web Extension SDK to authenticate instead of token https://docs.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-5.0
-# TODO Add task to increment variable value
-# TODO Add task to set variable value
-# TODO Add task to create/set variable value
-# TODO Add option to this task to set either a hard value or a variable name to use value (with option to increment ?)
+# TODO Add option to this task to set either 
+# - a hard value
+# - a variable name to use value
+
+# - option to take variable from definition
+
+# - option to increment the value
 
 Write-Host "Starting variable-definition-update"
 Trace-VstsEnteringInvocation $MyInvocation

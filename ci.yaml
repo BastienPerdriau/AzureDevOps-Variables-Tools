@@ -1,0 +1,95 @@
+resources:
+- repo: self
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - .gitignore
+    - README.md
+
+pr:
+- master
+
+queue:
+  name: Hosted VS2017
+
+steps:
+- task: ms-devlabs.vsts-developer-tools-build-tasks.tfx-installer-build-task.TfxInstaller@1
+  displayName: 'Use Node CLI for Azure DevOps: v0.6.x'
+
+- task: richardfennellBM.BM-VSTS-Versioning-Task.Version-JSONFile-Task.VersionJSONFile@2
+  displayName: 'Version JSON File'
+  inputs:
+    recursion: false
+    VersionNumber: '$(MajorVersion).$(MinorVersion).$(PatchVersion)'
+    useBuildNumberDirectly: true
+    FilenamePattern: 'vss-extension.json'
+
+- task: ms-devlabs.vsts-developer-tools-build-tasks.package-extension-build-task.PackageVSTSExtension@1
+  displayName: 'Package Extension: AzureDevOps-BusinessCentral-Tools'
+  inputs:
+    outputPath: '$(Build.ArtifactStagingDirectory)/Build'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: Build'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Build'
+    ArtifactName: Build
+
+- powershell: |
+   # START OF VALUES TO BE SET BY THE USER
+   $valueName = 'PatchVersion'
+   $token = ''
+   $apiVersion ="4.1"   #ensures all the API calls use the same API Version
+   # END OF VALUES TO BE SET BY THE USER
+   
+   $uriRoot = $env:SYSTEM_TEAMFOUNDATIONSERVERURI
+   $ProjectName = $env:SYSTEM_TEAMPROJECT
+   $BuildDefId = $env:SYSTEM_DEFINITIONID 
+   $uri = "$uriRoot$ProjectName/_apis/build/definitions?api-version=$apiVersion"
+   
+   # Base64-encodes the Personal Access Token (PAT) appropriately
+   $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "", $token)))
+   $header = @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
+   
+   # Get the list of Build Definitions
+   $buildDefs = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers $header
+   
+   # Find the build definition for this project
+   $buildDef = $buildDefs.value | Where-Object { $_.id -eq $BuildDefId } 
+   if ($buildDef -eq $null)
+   {
+       Write-Error "Unable to find a build definition for Project '$ProjectName'. Check the config values and try again." -ErrorAction Stop
+   }
+   $getUrl = "$($buildDef.Url)?api-version=$apiVersion"
+   $projectDef = Invoke-RestMethod -Uri $getUrl -Method Get -ContentType "application/json" -Headers $header
+   
+   if ($projectDef.variables.$valueName -eq $null)
+   {
+       Write-Error "Unable to find a variable called '$valueName' in Project $ProjectName. Please check the config and try again." -ErrorAction Stop
+   }
+   # get and increment the variable in $valueName
+   [int]$counter = [convert]::ToInt32($projectDef.variables.$valueName.Value, 10)
+   $updatedCounter = $counter + 1
+   Write-Host ("##vso[task.setvariable variable={0};]{1}" -f $valueName, $updatedCounter)
+   Write-Host "Patch Version for '$ProjectName' is $counter. Will be updating to $updatedCounter"
+   
+   # Update the value and update VSTS
+   $projectDef.variables.$valueName.Value = $updatedCounter.ToString()
+   $projectDefJson = $projectDef | ConvertTo-Json -Depth 50 -Compress
+   
+   # build the URL to cater for if the Project Definition URL already has parameters or not.
+   $separator = "?"
+   if ($projectDef.Url -like '*?*')
+   {
+       $separator = "&"
+   }
+   $putUrl = "$($projectDef.Url)$($separator)api-version=$apiVersion"
+   Write-Verbose "Updating Patch Version with URL: $putUrl"
+   Invoke-RestMethod -Method Put -Uri $putUrl -Headers $header -ContentType "application/json" -Body ([System.Text.Encoding]::UTF8.GetBytes($projectDefJson))  | Out-Null
+  displayName: 'Update PatchVersion value'
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')

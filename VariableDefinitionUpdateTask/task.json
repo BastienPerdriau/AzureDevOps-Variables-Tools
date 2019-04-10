@@ -1,0 +1,52 @@
+{
+   "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+   "id": "1310a9cf-c711-4359-98c4-d7d93672932e",
+   "name": "VariableDefinitionUpdate",
+   "friendlyName": "Update definition variable",
+   "description": "Update the value of a variable in definition",
+   "helpMarkDown": "Update the value of a variable in definition",
+   "category": "Azure Pipelines",
+   "visibility": [
+      "Build",
+      "Release"
+   ],
+   "author": "Bastien Perdriau",
+   "version": {
+      "Major": 0,
+      "Minor": 1,
+      "Patch": 0
+   },
+   "instanceNameFormat": "Update definition variable",
+   "inputs": [
+      {
+         "name": "PAT",
+         "label": "PAT",
+         "type": "string",
+         "defaultValue": "",
+         "required": true,
+         "helpMarkDown": "Personal Access Token"
+      },
+      {
+         "name": "variableName",
+         "label": "Name",
+         "type": "string",
+         "defaultValue": "",
+         "required": true,
+         "helpMarkDown": "Name of the variable to update"
+      },
+      {
+         "name": "variableValue",
+         "label": "Value",
+         "type": "string",
+         "defaultValue": "",
+         "required": true,
+         "helpMarkDown": "Value of the variable to update"
+      }
+   ],
+   "execution": {
+      "PowerShell3": {
+         "target": "VariableDefinitionUpdateTask.ps1"
+      }
+   }
+   
+}
