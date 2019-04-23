@@ -50,7 +50,7 @@ steps:
 - powershell: |
    # START OF VALUES TO BE SET BY THE USER
    $valueName = 'PatchVersion'
-   $token = ''
+   $token = $env:ADS_TOKEN
    $apiVersion ="4.1"   #ensures all the API calls use the same API Version
    # END OF VALUES TO BE SET BY THE USER
    
