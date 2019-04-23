@@ -31,7 +31,7 @@ steps:
     FilenamePattern: 'vss-extension.json'
 
 - task: ms-devlabs.vsts-developer-tools-build-tasks.package-extension-build-task.PackageVSTSExtension@1
-  displayName: 'Package Extension: AzureDevOps-BusinessCentral-Tools'
+  displayName: 'Package Extension: AzureDevOps-Variables-Tools'
   inputs:
     outputPath: '$(Build.ArtifactStagingDirectory)/Build'
 

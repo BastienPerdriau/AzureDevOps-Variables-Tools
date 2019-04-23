@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "id": "azuredevops-variables-tasks",
+  "id": "AzureDevOps-Variables-Tools",
   "publisher": "BastienPerdriau",
   "version": "0.1.1",
   "name": "Variables",
@@ -41,18 +41,18 @@
   },
   "links": {
     "getstarted": {
-      "uri": "https://github.com/BastienPerdriau/azuredevops-variables-tasks"
+      "uri": "https://github.com/BastienPerdriau/AzureDevOps-Variables-Tools"
     },
     "support": {
-      "uri": "https://github.com/BastienPerdriau/azuredevops-variables-tasks/issues"
+      "uri": "https://github.com/BastienPerdriau/AzureDevOps-Variables-Tools/issues"
     },
     "issues": {
-      "uri": "https://github.com/BastienPerdriau/azuredevops-variables-tasks/issues"
+      "uri": "https://github.com/BastienPerdriau/AzureDevOps-Variables-Tools/issues"
     }
   },
   "repository": {
     "type": "git",
-    "uri": "https://github.com/BastienPerdriau/azuredevops-variables-tasks"
+    "uri": "https://github.com/BastienPerdriau/AzureDevOps-Variables-Tools"
   },
   "branding": {
     "color": "rgb(220, 235, 252)",
