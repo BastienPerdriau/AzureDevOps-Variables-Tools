@@ -1,8 +1,9 @@
 resources:
-- repo: self
+  repositories:
+  - repository: self
+    type: github
 
 trigger:
-  batch: true
   branches:
     include:
     - master
