@@ -30,6 +30,12 @@ steps:
     useBuildNumberDirectly: true
     FilenamePattern: 'vss-extension.json'
 
+- task: PowerShell@2
+  displayName: 'Update tasks version'
+  inputs:
+    targetType: 'filePath'
+    filePath: '$(Build.SourcesDirectory)/Build.ps1'
+
 - task: ms-devlabs.vsts-developer-tools-build-tasks.package-extension-build-task.PackageVSTSExtension@1
   displayName: 'Package Extension: AzureDevOps-Variables-Tools'
   inputs:
