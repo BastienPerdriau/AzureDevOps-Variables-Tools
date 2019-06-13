@@ -7,7 +7,8 @@ $Step = Get-VstsInput -Name step -Require
 $oldValueString = (Get-Item env:$VariableName).Value
 [int]$oldValue = [convert]::ToInt32($oldValueString, 10)
 
-switch ($Operation) {
+switch ($Operation)
+{
     "increment"
     {
         $newValue = $oldValue + $Step
