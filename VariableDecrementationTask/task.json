@@ -1,6 +1,6 @@
 {
    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
-   "id": "0e5dc5a8-6fec-415e-82ff-a4d72ed7fe7b",
+   "id": "7c3a2291-8481-4b21-8352-5a38cca13c50",
    "name": "VariableDecrementation",
    "friendlyName": "Decrement variable",
    "description": "Decrement variable",
