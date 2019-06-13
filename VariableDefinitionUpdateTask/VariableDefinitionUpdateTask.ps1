@@ -45,19 +45,16 @@ switch ($UseValueFrom) {
 	{($_ -eq "pipelineDefinition") -or ($_ -eq "pipelineExecution")}
 	{
 		[string]$IntegerOperation = Get-VstsInput -Name integerOperation -Require
-		if ($IntegerOperation -ne "none")
+		$Step = Get-VstsInput -Name step -Require
+		switch ($IntegerOperation)
 		{
-			$Step = Get-VstsInput -Name step -Require
-			switch ($IntegerOperation)
+			"increment"
 			{
-				"increment"
-				{
-					$newValue = $oldValue + $Step
-				}
-				"decrement"
-				{
-					$newValue = $oldValue - $Step
-				}
+				$newValue = $oldValue + $Step
+			}
+			"decrement"
+			{
+				$newValue = $oldValue - $Step
 			}
 		}
 	}

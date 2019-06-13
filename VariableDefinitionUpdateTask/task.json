@@ -41,7 +41,7 @@
          "options": {
             "pipelineDefinition": "Pipeline Definition",
             "pipelineExecution": "Pipeline Execution",
-            "customValue": "CustomValue"
+            "customValue": "Custom Value"
          },
          "defaultValue": "pipelineDefinition",
          "required": true,
@@ -52,11 +52,10 @@
          "label": "Integer Operation",
          "type": "radio",
          "options": {
-            "none": "None",
             "increment": "Increment",
             "decrement": "Decrement"
          },
-         "defaultValue": "none",
+         "defaultValue": "increment",
          "required": true,
          "helpMarkDown": "Operation on integer variable",
          "visibleRule": "useValueFrom = pipelineDefinition || useValueFrom = pipelineExecution"
@@ -68,7 +67,7 @@
          "defaultValue": "1",
          "required": true,
          "helpMarkDown": "Step to increment or decrement the value",
-         "visibleRule": "integerOperation = increment || integerOperation = decrement"
+         "visibleRule": "useValueFrom = pipelineDefinition || useValueFrom = pipelineExecution"
       },
       {
          "name": "variableValue",
