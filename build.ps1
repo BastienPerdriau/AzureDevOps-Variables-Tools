@@ -11,6 +11,8 @@ $patchVersion = $versionParts[2]
 
 foreach ($task in $tasks)
 {
+    Copy-Item -Path .\ps_modules -Destination $task.FullName -Recurse -Force
+    
     $taskManifestPath = Join-Path -Path $task.FullName -ChildPath "task.json"
     $taskManifest = Get-Content -Path $taskManifestPath -Force | ConvertFrom-Json
 
