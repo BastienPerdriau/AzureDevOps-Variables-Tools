@@ -16,9 +16,6 @@ Trace-VstsEnteringInvocation $MyInvocation
 # - option to decrement the value
 # - option to write the new value into env variables
 
-Import-Module $env:CURRENT_TASK_ROOTDIR\src\GetAzureADToken.psm1 -DisableNameChecking
-Import-Module $env:CURRENT_TASK_ROOTDIR\src\GetDeploymentUri.psm1 -DisableNameChecking
-
 try
 {
 	$ApiVersion="5.0"
