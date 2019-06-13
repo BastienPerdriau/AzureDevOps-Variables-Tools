@@ -66,6 +66,9 @@
       "path": "VariableIncrementationTask"
     },
     {
+      "path": "VariableDecrementationTask"
+    },
+    {
       "path": "VariableDefinitionUpdateTask"
     }
   ],
@@ -88,6 +91,16 @@
       "type": "ms.vss-distributed-task.task",
       "properties": {
         "name": "VariableIncrementationTask"
+      }
+    },
+    {
+      "id": "VariableDecrementationTask",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "type": "ms.vss-distributed-task.task",
+      "properties": {
+        "name": "VariableDecrementationTask"
       }
     },
     {
