@@ -20,7 +20,10 @@ queue:
 
 steps:
 - task: ms-devlabs.vsts-developer-tools-build-tasks.tfx-installer-build-task.TfxInstaller@1
-  displayName: 'Use Node CLI for Azure DevOps: v0.6.x'
+  displayName: 'Use Node CLI for Azure DevOps'
+  inputs:
+    version: v0.7.x
+    checkLatest: true
 
 - task: richardfennellBM.BM-VSTS-Versioning-Task.Version-JSONFile-Task.VersionJSONFile@2
   displayName: 'Version JSON File'
