@@ -1,0 +1,56 @@
+{
+   "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+   "id": "0e5dc5a8-6fec-415e-82ff-a4d72ed7fe7b",
+   "name": "IntegerVariableOperation",
+   "friendlyName": "Integer variable operation",
+   "description": "Integer variable operation",
+   "helpMarkDown": "Integer variable operation",
+   "category": "Azure Pipelines",
+   "visibility": [
+      "Build",
+      "Release"
+   ],
+   "author": "Bastien Perdriau",
+   "version": {
+      "Major": 0,
+      "Minor": 1,
+      "Patch": 0
+   },
+   "instanceNameFormat": "Integer variable operation",
+   "inputs": [
+      {
+         "name": "variableName",
+         "label": "Name",
+         "type": "string",
+         "defaultValue": "",
+         "required": true,
+         "helpMarkDown": "Name of the variable"
+      },
+      {
+         "name": "operation",
+         "label": "Operation",
+         "type": "radio",
+         "options": {
+            "increment": "Increment",
+            "decrement": "Decrement"
+         },
+         "defaultValue": "increment",
+         "required": true,
+         "helpMarkDown": "Operation on the integer variable"
+      },
+      {
+         "name": "step",
+         "label": "Step",
+         "type": "string",
+         "defaultValue": "1",
+         "required": true,
+         "helpMarkDown": "Operation on integer variable"
+      }
+   ],
+   "execution": {
+      "PowerShell3": {
+         "target": "IntegerVariableOperationTask.ps1"
+      }
+   }
+   
+}
