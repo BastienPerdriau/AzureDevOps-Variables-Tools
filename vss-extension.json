@@ -63,7 +63,7 @@
       "path": "VariableAssignmentTask"
     },
     {
-      "path": "VariableIncrementationTask"
+      "path": "IntegerVariableOperationTask"
     },
     {
       "path": "VariableDefinitionUpdateTask"
@@ -81,13 +81,13 @@
       }
     },
     {
-      "id": "VariableIncrementationTask",
+      "id": "IntegerVariableOperationTask",
       "targets": [
         "ms.vss-distributed-task.tasks"
       ],
       "type": "ms.vss-distributed-task.task",
       "properties": {
-        "name": "VariableIncrementationTask"
+        "name": "IntegerVariableOperationTask"
       }
     },
     {
