@@ -1,32 +1,23 @@
-#
-# variable-definition-update.ps1
-#
-[CmdletBinding(DefaultParameterSetName = 'None')]
-param(
-	[Parameter(Mandatory=$true)]
-	[string]	
-	$VariableName,
-	
-	[Parameter(Mandatory=$true)]
-	[string]
-	$VariableValue,
+Trace-VstsEnteringInvocation $MyInvocation
 
-	[Parameter(Mandatory=$true)]
-	[string]
-	$Token
-)
+[string]$PAT = Get-VstsInput -Name PAT -Require
+[string]$VariableName = Get-VstsInput -Name variableName -Require
+[string]$VariableValue = Get-VstsInput -Name variableValue -Require
 
 # TODO Use VSS Web Extension SDK to authenticate instead of token https://docs.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-5.0
-# TODO Add option to this task to set either 
+# TODO Add option to this task to set either
 # - a hard value
 # - a variable name to use value
 
 # - option to take variable from definition
+# - option to take variable from running build
 
 # - option to increment the value
+# - option to decrement the value
+# - option to write the new value into env variables
 
-Write-Host "Starting variable-definition-update"
-Trace-VstsEnteringInvocation $MyInvocation
+Import-Module $env:CURRENT_TASK_ROOTDIR\src\GetAzureADToken.psm1 -DisableNameChecking
+Import-Module $env:CURRENT_TASK_ROOTDIR\src\GetDeploymentUri.psm1 -DisableNameChecking
 
 try
 {
@@ -37,7 +28,7 @@ try
 	$uri = "$uriRoot$ProjectName/_apis/build/definitions?api-version=$ApiVersion"
 
 	# Base64-encodes the Personal Access Token (PAT) appropriately
-	$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "", $Token)))
+	$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "", $PAT)))
 	$header = @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
 
 	# Get the list of Build Definitions
@@ -53,20 +44,15 @@ try
 	$getUrl = "$($buildDef.Url)?api-version=$ApiVersion"
 	$projectDef = Invoke-RestMethod -Uri $getUrl -Method Get -ContentType "application/json" -Headers $header
 
-	if ($null -eq $projectDef.variables.$valueName)
+	if ($null -eq $projectDef.variables.$VariableName)
 	{
-		Write-Error "Unable to find a variable called '$valueName' in Project $ProjectName. Please check the config and try again." -ErrorAction Stop
+		Write-Error "Unable to find a variable called '$VariableName' in Project $ProjectName. Please check the config and try again." -ErrorAction Stop
 	}
 
-	# get and increment the variable in $valueName
-	[int]$counter = [convert]::ToInt32($projectDef.variables.$valueName.Value, 10)
-	$updatedCounter = $counter + 1
-	Write-Host "Project Build Number for '$ProjectName' is $counter. Will be updating to $updatedCounter"
-
 	# Update the value and update Azure DevOps
-	$projectDef.variables.$valueName.Value = $updatedCounter.ToString()
+	$projectDef.variables.$VariableName.Value = $VariableValue
 	$projectDefJson = $projectDef | ConvertTo-Json -Depth 50 -Compress
-	Write-Output ("projectDef.variables.valueName.Value" -f $projectDef.variables.$valueName.Value)
+	Write-Output ("projectDef.variables.VariableName.Value" -f $projectDef.variables.$VariableName.Value)
 
 	# build the URL to cater for if the Project Definition URL already has parameters or not.
 	$separator = "?"
@@ -81,7 +67,7 @@ try
 	Write-Output "--------------------------"
 	Invoke-RestMethod -Method Put -Uri $putUrl -Headers $header -ContentType "application/json" -Body ([System.Text.Encoding]::UTF8.GetBytes($projectDefJson)) | Out-Null
 
-	Write-Host "##vso[task.setvariable variable=$valueName]$updatedCounter"
+	Write-Host "##vso[task.setvariable variable=$VariableName]$VariableValue"
 }
 catch
 {
