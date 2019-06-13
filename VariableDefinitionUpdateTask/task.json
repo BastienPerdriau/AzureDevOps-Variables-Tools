@@ -35,13 +35,58 @@
          "helpMarkDown": "Name of the variable to update"
       },
       {
+         "name": "useValueFrom",
+         "label": "Use Value From",
+         "type": "radio",
+         "options": {
+            "pipelineDefinition": "Pipeline Definition",
+            "pipelineExecution": "Pipeline Execution",
+            "customValue": "CustomValue"
+         },
+         "defaultValue": "pipelineDefinition",
+         "required": true,
+         "helpMarkDown": "Origin of the value of the variable to update"
+      },
+      {
+         "name": "integerOperation",
+         "label": "Integer Operation",
+         "type": "radio",
+         "options": {
+            "none": "None",
+            "increment": "Increment",
+            "decrement": "Decrement"
+         },
+         "defaultValue": "none",
+         "required": true,
+         "helpMarkDown": "Operation on integer variable",
+         "visibleRule": "useValueFrom = pipelineDefinition || useValueFrom = pipelineExecution"
+      },
+      {
+         "name": "step",
+         "label": "Step",
+         "type": "string",
+         "defaultValue": "1",
+         "required": true,
+         "helpMarkDown": "Step to increment or decrement the value",
+         "visibleRule": "integerOperation = increment || integerOperation = decrement"
+      },
+      {
          "name": "variableValue",
          "label": "Value",
          "type": "string",
          "defaultValue": "",
          "required": true,
-         "helpMarkDown": "Value of the variable to update"
-      }
+         "helpMarkDown": "Value of the variable to update",
+         "visibleRule": "useValueFrom = customValue"
+      },
+      {
+         "name": "outputNewValue",
+         "label": "Output New Value",
+         "type": "boolean",
+         "defaultValue": false,
+         "required": false,
+         "helpMarkDown": "Check to write the new value in environment variables"
+     }
    ],
    "execution": {
       "PowerShell3": {
