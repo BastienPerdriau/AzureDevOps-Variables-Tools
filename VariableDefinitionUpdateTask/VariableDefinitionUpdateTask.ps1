@@ -36,16 +36,21 @@ if ($null -eq $projectDef.variables.$VariableName)
 switch ($UseValueFrom) {
 	"pipelineDefinition"
 	{
-		$oldValue = $projectDef.variables.$VariableName.Value
+		$oldValueString = $projectDef.variables.$VariableName.Value
 	}
 	"pipelineExecution"
 	{
-		$oldValue = (Get-Item env:$VariableName).Value
+		$oldValueString = (Get-Item env:$VariableName).Value
 	}
 	{($_ -eq "pipelineDefinition") -or ($_ -eq "pipelineExecution")}
 	{
 		[string]$IntegerOperation = Get-VstsInput -Name integerOperation -Require
-		$Step = Get-VstsInput -Name step -Require
+		
+		[int]$oldValue = [convert]::ToInt32($oldValueString, 10)
+
+		$StepString = Get-VstsInput -Name step -Require
+		[int]$Step = [convert]::ToInt32($StepString, 10)
+		
 		switch ($IntegerOperation)
 		{
 			"increment"

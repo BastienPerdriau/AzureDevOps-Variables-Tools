@@ -2,10 +2,12 @@ Trace-VstsEnteringInvocation $MyInvocation
 
 $VariableName = Get-VstsInput -Name variableName -Require
 $Operation = Get-VstsInput -Name operation -Require
-$Step = Get-VstsInput -Name step -Require
+$StepString = Get-VstsInput -Name step -Require
 
 $oldValueString = (Get-Item env:$VariableName).Value
 [int]$oldValue = [convert]::ToInt32($oldValueString, 10)
+
+[int]$Step = [convert]::ToInt32($StepString, 10)
 
 switch ($Operation)
 {
