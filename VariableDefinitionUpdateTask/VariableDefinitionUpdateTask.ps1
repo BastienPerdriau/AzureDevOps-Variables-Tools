@@ -1,6 +1,5 @@
 Trace-VstsEnteringInvocation $MyInvocation
 
-[string]$PAT = Get-VstsInput -Name PAT -Require
 [string]$VariableName = Get-VstsInput -Name variableName -Require
 [string]$UseValueFrom = Get-VstsInput -Name useValueFrom -Require
 [string]$OutputNewValue = Get-VstsInput -Name outputNewValue -AsBool
@@ -11,9 +10,16 @@ $ProjectName = $env:SYSTEM_TEAMPROJECT
 $BuildId = $env:SYSTEM_DEFINITIONID 
 $uri = "$uriRoot$ProjectName/_apis/build/definitions?api-version=$ApiVersion"
 
+if (!(Get-VstsTaskVariable -Name "System.AccessToken")) {
+    throw ("OAuth token not found. Make sure to have 'Allow Scripts to Access OAuth Token' enabled in the build definition.
+			Also, give 'Project Collection Build Service' 'Edit build pipeline' permissions")
+}
+
+$token = Get-VstsTaskVariable -Name "System.AccessToken"
+
 # Base64-encodes the Personal Access Token (PAT) appropriately
-$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "", $PAT)))
-$headers = @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
+$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "", $token)))
+$headers = @{ Authorization = ("Basic {0}" -f $base64AuthInfo) }
 
 # Get the list of Build Definitions
 $buildDefs = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers $headers

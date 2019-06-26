@@ -19,14 +19,6 @@
    "instanceNameFormat": "Update definition variable",
    "inputs": [
       {
-         "name": "PAT",
-         "label": "PAT",
-         "type": "string",
-         "defaultValue": "",
-         "required": true,
-         "helpMarkDown": "Personal Access Token"
-      },
-      {
          "name": "variableName",
          "label": "Name",
          "type": "string",
