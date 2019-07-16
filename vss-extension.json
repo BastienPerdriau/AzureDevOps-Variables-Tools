@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "id": "AzureDevOps-Variables-Tools",
   "publisher": "BastienPerdriau",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "name": "Variables",
   "scopes": ["vso.build_execute", "vso.release_manage"],
   "description": "Build & Release tasks to handle variable in definitions and executions",
