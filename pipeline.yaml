@@ -60,67 +60,13 @@ stages:
         artifactName: Build
         targetPath: '$(Build.ArtifactStagingDirectory)/Build'
 
-    - powershell: |
-       # START OF VALUES TO BE SET BY THE USER
-       $valueName = 'PatchVersion'
-       $token = $env:ADS_TOKEN
-       $apiVersion ="4.1"   #ensures all the API calls use the same API Version
-       # END OF VALUES TO BE SET BY THE USER
-       
-       $uriRoot = $env:SYSTEM_TEAMFOUNDATIONSERVERURI
-       $ProjectName = $env:SYSTEM_TEAMPROJECT
-       $BuildDefId = $env:SYSTEM_DEFINITIONID 
-       $uri = "$uriRoot$ProjectName/_apis/build/definitions?api-version=$apiVersion"
-       
-       # Base64-encodes the Personal Access Token (PAT) appropriately
-       $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "", $token)))
-       $header = @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
-       
-       # Get the list of Build Definitions
-       $buildDefs = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers $header
-       
-       # Find the build definition for this project
-       $buildDef = $buildDefs.value | Where-Object { $_.id -eq $BuildDefId } 
-       if ($buildDef -eq $null)
-       {
-           Write-Error "Unable to find a build definition for Project '$ProjectName'. Check the config values and try again." -ErrorAction Stop
-       }
-       $getUrl = "$($buildDef.Url)?api-version=$apiVersion"
-       $projectDef = Invoke-RestMethod -Uri $getUrl -Method Get -ContentType "application/json" -Headers $header
-       
-       if ($projectDef.variables.$valueName -eq $null)
-       {
-           Write-Error "Unable to find a variable called '$valueName' in Project $ProjectName. Please check the config and try again." -ErrorAction Stop
-       }
-       # get and increment the variable in $valueName
-       [int]$counter = [convert]::ToInt32($projectDef.variables.$valueName.Value, 10)
-       $updatedCounter = $counter + 1
-       Write-Host ("##vso[task.setvariable variable={0};]{1}" -f $valueName, $updatedCounter)
-       Write-Host "Patch Version for '$ProjectName' is $counter. Will be updating to $updatedCounter"
-       
-       # Update the value and update VSTS
-       $projectDef.variables.$valueName.Value = $updatedCounter.ToString()
-       Write-Host "1"
-       $projectDefJson = $projectDef | ConvertTo-Json -Depth 50 -Compress
-       Write-Host "2"
-       
-       # build the URL to cater for if the Project Definition URL already has parameters or not.
-       $separator = "?"
-       Write-Host "3"
-       if ($projectDef.Url -like '*?*')
-       {
-          Write-Host "4"
-           $separator = "&"
-           Write-Host "5"
-       }
-       Write-Host "6"
-       $putUrl = "$($projectDef.Url)$($separator)api-version=$apiVersion"
-       Write-Host "7"
-       Write-Host "Updating Patch Version with URL: $putUrl"
-       Write-Host "8"
-       Invoke-RestMethod -Method Put -Uri $putUrl -Headers $header -ContentType "application/json" -Body ([System.Text.Encoding]::UTF8.GetBytes($projectDefJson))  | Out-Null
-       Write-Host "9"
+    - task: BastienPerdriau.AzureDevOps-Variables-Tools.VariableDefinitionUpdateTask.VariableDefinitionUpdate@1
       displayName: 'Update PatchVersion value'
+      inputs:
+        variableName: 'PatchVersion'
+        useValueFrom: 'pipelineDefinition'
+        integerOperation: 'increment'
+        step: '1'
       condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
 - stage: CD_Master
